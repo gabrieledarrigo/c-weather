@@ -1,0 +1,20 @@
+[
+{
+  "id": 519188,
+  "name": "Novinki",
+  "country": "RU",
+  "coord": {
+    "lon": 37.666668,
+    "lat": 55.683334
+  }
+},
+{
+  "id": 1283378,
+  "name": "Gorkhā",
+  "country": "NP",
+  "coord": {
+    "lon": 84.633331,
+    "lat": 28
+  }
+}
+]
