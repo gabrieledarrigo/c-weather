@@ -35,42 +35,62 @@ char * read_file() {
     return buffer;
 }
 
-int main() {
-    char * data;
-    data = read_file();
-
+jsmntok_t * parse_json(char * data) { 
     jsmn_parser parser;
     jsmn_init(&parser);
-    unsigned int number_of_tokens = 209580;
+    int number_of_tokens = 209580;
     
-    printf("Number of tokens: %d\n", number_of_tokens);
-
     size_t size = sizeof(jsmntok_t) * number_of_tokens;
     jsmntok_t * tokens = malloc(size);
-    printf("%lu\n", size);
 
     int result = jsmn_parse(&parser, data, strlen(data), tokens, number_of_tokens);
 
     if (result < 0) {
         printf("Failed to parse JSON");
         perror("Err ");
-        return 1;
+        exit(1);
     }
 
     if (tokens[0].type != JSMN_ARRAY) {
         printf("The first element should be an array");
-        return 1;
+        exit(1);
     }
 
-    for (int i = 1; i < 22; i++) {
+    return tokens;
+}
+
+
+
+
+int main(int argc, char *argv[]) {
+    printf("Search for weather forecast in: %s\n", argv[1]);
+
+    char * data;
+    jsmntok_t * tokens;
+    
+    // Read data from file
+    data = read_file();
+    // Parse the json
+    tokens = parse_json(data);
+
+    printf("size: %i\n", tokens[0].size);
+
+    // Iterate through all json array
+    // to find the desired city.
+    for (int i = 1; i <= 20; i++) {
         int length = tokens[i].end - tokens[i].start;
         char city[length + 1];
         strncpy(city, data + tokens[i].start, length);
         city[length + 1] = '\0';
 
-        printf("%s\n", city);
-    }
+        printf("To search: %s - Actual: %s\n", city, argv[1]);
 
+        if (strcmp(argv[1], city) == 0) {
+            printf("Found! %s\n", city);
+        } else {
+            printf("Not Found!");
+        }
+    }
 
     return 0;
 }
