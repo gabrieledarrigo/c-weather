@@ -59,11 +59,15 @@ jsmntok_t * parse_json(char * data) {
     return tokens;
 }
 
-
-
-
 int main(int argc, char *argv[]) {
-    printf("Search for weather forecast in: %s\n", argv[1]);
+    printf("Number of argc: %i\n", argc);
+
+    if (argc == 1) {
+        printf("Please specify the name of a city\n");
+        exit(0);
+    } else {
+        printf("Search for weather forecast in: %s\n", argv[1]);
+    }
 
     char * data;
     jsmntok_t * tokens;
@@ -73,24 +77,25 @@ int main(int argc, char *argv[]) {
     // Parse the json
     tokens = parse_json(data);
 
-    printf("size: %i\n", tokens[0].size);
+    printf("Tokens size: %i\n", tokens[0].size);
 
-    // Iterate through all json array
-    // to find the desired city.
-    for (int i = 1; i <= 20; i++) {
+    //Iterate the json array to find the desired city.
+    for (int i = 1; i <= tokens[0].size; i++) {
         int length = tokens[i].end - tokens[i].start;
         char city[length + 1];
         strncpy(city, data + tokens[i].start, length);
-        city[length + 1] = '\0';
+        city[length] = '\0';
 
-        printf("To search: %s - Actual: %s\n", city, argv[1]);
+        printf("To search: %s - Actual: %s\n", argv[1], city);
 
         if (strcmp(argv[1], city) == 0) {
             printf("Found! %s\n", city);
-        } else {
-            printf("Not Found!");
+            break;
         }
     }
 
+    printf("Searched city: %s not found\n", argv[1]);
+    free(data);
+    free(tokens);
     return 0;
 }
