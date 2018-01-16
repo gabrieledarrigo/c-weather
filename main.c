@@ -4,6 +4,11 @@
 #include <curl/curl.h>
 #include "./lib/jsmn.h"
 
+struct Buffer {
+    char *memory;
+    size_t size;
+};
+
 /**
  * Read the file in ./data/city.json and return a pointer
  * to the buffer that holds the data.
@@ -52,10 +57,10 @@ jsmntok_t * parse_json(char * data) {
         exit(1);
     }
 
-    if (tokens[0].type != JSMN_ARRAY) {
-        printf("The first element should be an array");
-        exit(1);
-    }
+    // if (tokens[0].type != JSMN_ARRAY || tokens[0].type != JSMN_OBJECT) {
+    //     printf("The first element should be an array");
+    //     exit(1);
+    // }
 
     return tokens;
 }
@@ -76,11 +81,6 @@ int search_city(char * to_search, char * data, jsmntok_t * tokens) {
 
     return 0;
 }
-
-struct Buffer {
-    char *memory;
-    size_t size;
-};
 
 size_t write_to_memory(void *data, size_t size, size_t nmemb, void *pointer) {
     size_t real_size = size * nmemb;
@@ -126,7 +126,6 @@ char * get_weather_data(char * city) {
     return buffer.memory;
 };
 
-
 int main(int argc, char *argv[]) {
     if (argc == 1) {
         printf("Please specify the name of a city to search for\n");
@@ -134,17 +133,15 @@ int main(int argc, char *argv[]) {
     } else {
         printf("Search for weather forecast in: %s\n", argv[1]);
     }
-
-    int found;
-    char * data;
-    jsmntok_t * tokens;
     
     // Read data from file
-    data = read_file();
+    char * data = read_file();
+
     // Parse the json
-    tokens = parse_json(data);
+    jsmntok_t * cities_tokens = parse_json(data);
+
     // Search the city
-    found = search_city(argv[1], data, tokens);
+    int found = search_city(argv[1], data, cities_tokens);
 
     //printf("Tokens size: %i\n", tokens[0].size);
 
@@ -153,12 +150,17 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
 
-    printf("Searched city: \"%s\" was found\n", argv[1]);  
+    //printf("Searched city: \"%s\" was found\n", argv[1]);  
 
+    char weather_data[] = get_weather_data( argv[1]);
 
-    get_weather_data( argv[1]);
+    jsmntok_t * weather_tokens = parse_json(weather_data);
+
+    printf("%s\n", weather_data);
+    printf("Tokens size: %i\n", weather_tokens[0].size);
 
     free(data);
-    free(tokens);
+    free(cities_tokens);
+    free(weather_tokens);
     return 0;
 }
