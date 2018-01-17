@@ -12,7 +12,7 @@
 int main(int argc, char *argv[]) {
     if (argc == 1) {
         printf("Please specify the name of a city to search for\n");
-        exit(0);
+        exit(1);
     } else {
         printf("Search for weather forecast in: %s\n", argv[1]);
     }
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 
     if (!found) {
         printf("%s was not found in the archive. Please provide another city to search for\n", argv[1]);
-        exit(0);
+        exit(1);
     }
 
     //printf("Searched city: \"%s\" was found\n", argv[1]);  
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     jsmntok_t * weather_tokens = parse_json(weather_data, 256);
 
     printf("%s\n", weather_data);
-    printf("Tokens size: %i\n", weather_tokens[0].size);
+    // printf("Tokens size: %i\n", weather_tokens[0].size);
 
     free(data);
     free(cities_tokens);

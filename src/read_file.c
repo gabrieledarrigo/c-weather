@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "include/Buffer.h"
 
 /**
  * Read a file, given a filename parameter.
