@@ -1,6 +1,13 @@
-var fs = require('fs');
+const fs = require('fs');
 
-fs.readFile(__dirname + '/city.list.json', (err, data) => {
+/**
+ * Transform the json object with
+ * all the cities in a more simple and parsalble array structure.
+ * 
+ * @param {object} err 
+ * @param {object} data 
+ */
+const toJSONArray =  (err, data) => {
     if (err) {
         console.log(err);
     }
@@ -13,4 +20,7 @@ fs.readFile(__dirname + '/city.list.json', (err, data) => {
     });
 
     console.log(JSON.stringify(cities));
-});
+};
+
+
+fs.readFile(__dirname + '/city.list.json', toJSONArray);

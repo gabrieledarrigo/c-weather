@@ -9,8 +9,9 @@
  * for parsing implementation detail.
  * 
  * @param char * data
+ * @param int number_of_tokens
  * @return jsmntok_t * tokens
  */
-jsmntok_t * parse_json(char * data);
+jsmntok_t * parse_json(char * data, int number_of_tokens);
 
 #endif
