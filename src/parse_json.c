@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../lib/jsmn.h"
+#include "include/Parsed_Json.h"
 
 /**
  * Parse a json string with jsmn lib.
@@ -13,9 +14,10 @@
  * @param char * data
  * @return jsmntok_t * tokens
  */
-jsmntok_t * parse_json(char * data, int number_of_tokens) { 
+struct Parsed_Json parse_json(char * data, int number_of_tokens) { 
     jsmn_parser parser;
     jsmn_init(&parser);
+    struct Parsed_Json parsed;
 
     // Calculate the memory required for the tokens
     size_t size = sizeof(jsmntok_t) * number_of_tokens;
@@ -34,5 +36,8 @@ jsmntok_t * parse_json(char * data, int number_of_tokens) {
         exit(1);
     }
 
-    return tokens;
+    parsed.number_of_tokens = result;
+    parsed.tokens = tokens;
+
+    return parsed;
 }
