@@ -53,3 +53,6 @@ dkms.conf
 
 ### IDE
 .vscode/
+
+### Dont ignore
+!lib/libjsmna.a
