@@ -11,8 +11,10 @@
  **/
 char * read_file(const char * filename) {
     FILE * file;
-    char * buffer = NULL;
-    int size = 0;
+    
+    struct Buffer buffer;
+    buffer.memory = malloc(1);
+    buffer.size = 0;
 
     file = fopen(filename, "r+");
 
@@ -21,17 +23,17 @@ char * read_file(const char * filename) {
 
         // Iterate through all file's content and increment the actual file size.
         while ((temp = fgetc(file)) != EOF) {
-            size++;
+            buffer.size++;
         }
 
         // Assign the right amount of data to the buffer.
-        buffer = (char *) malloc((size + 1) * sizeof(char));
+        buffer.memory = (char *) malloc((buffer.size + 1) * sizeof(char));
         rewind(file);
-        fread(buffer, size, 1, file);
+        fread(buffer.memory, buffer.size, 1, file);
     } else {
         perror("Error: ");
     }
 
     fclose(file);
-    return buffer;
+    return buffer.memory;
 }

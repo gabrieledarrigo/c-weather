@@ -18,7 +18,6 @@
 
 # Libraries
 *.lib
-*.a
 *.la
 *.lo
 
@@ -53,6 +52,3 @@ dkms.conf
 
 ### IDE
 .vscode/
-
-### Dont ignore
-!lib/libjsmna.a
