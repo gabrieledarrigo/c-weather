@@ -5,28 +5,21 @@
 #include "lib/jsmn.h"
 #include "src/include/Buffer.h"
 #include "src/include/Parsed_Json.h"
-#include "src/include/read_file.h"
-#include "src/include/parse_json.h"
-#include "src/include/search_city.h"
+#include "src/include/check_json_string.h"
 #include "src/include/get_weather_data.h"
-
-int check_json_string(char * to_search, char * string, jsmntok_t token) {
-    if (token.type == JSMN_STRING && strcmp(to_search, string) == 0) {
-        return 0;
-    }
-
-    return -1;
-}
+#include "src/include/parse_json.h"
+#include "src/include/read_file.h"
+#include "src/include/search_city.h"
 
 int main(int argc, char *argv[]) {
     if (argc == 1) {
         printf("\n---------------------------------------------------\n");
-        printf("| Please specify the name of a city to search for |\n");
+        printf("| Please specify the name of a city to search for\n");
         printf("---------------------------------------------------\n\n");
         exit(1);
     } else {
         printf("\n---------------------------------------------------\n");
-        printf("| Searching for current weather in: %s        | \n", argv[1]);
+        printf("| Searching for current weather in: %s\n", argv[1]);
         printf("---------------------------------------------------\n\n");
     }
     
@@ -40,7 +33,7 @@ int main(int argc, char *argv[]) {
     // Search the city
     int found = search_city(argv[1], data, cities.tokens);
 
-    if (!found) {
+    if (found == -1) {
         printf("%s was not found in the archive. Please provide another city to search for\n", argv[1]);
         exit(1);
     }

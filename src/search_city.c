@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "../lib/jsmn.h"
+#include "include/check_json_string.h"
 
 /**
  * Search the "to_search" string parameter in the given string "data"
@@ -16,7 +16,6 @@
 int search_city(char * to_search, char * data, jsmntok_t * tokens) {
     //Iterate the json array to find the desired city.
     for (int i = 1; i <= tokens[0].size; i++) {
-
         // Compute the length of the string
         int length = tokens[i].end - tokens[i].start;
         char city[length + 1];
@@ -25,10 +24,10 @@ int search_city(char * to_search, char * data, jsmntok_t * tokens) {
         strncpy(city, data + tokens[i].start, length);
         city[length] = '\0';
 
-        if (strcmp(to_search, city) == 0) {
-            return 1;
+        if (check_json_string(to_search, city, tokens[i]) == 0) {
+            return 0;
         }
     }
 
-    return 0;
+    return -1;
 }
