@@ -38,6 +38,6 @@ struct Parsed_Json parse_json(char * data, int number_of_tokens) {
 
     parsed.number_of_tokens = result;
     parsed.tokens = tokens;
-
+    
     return parsed;
 }

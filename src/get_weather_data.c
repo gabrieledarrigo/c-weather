@@ -40,23 +40,26 @@ char * get_weather_data(char * city) {
     curl_global_init(CURL_GLOBAL_ALL);
 
     // Build the url
-    char url[] = "http://api.openweathermap.org/data/2.5/weather?appid=82390064987812e43f9ec57cb01311b6&q=";
-    strcat(url, city);
+    char base_url[] = "http://api.openweathermap.org/data/2.5/weather?appid=82390064987812e43f9ec57cb01311b6&units=metric&q=";
+    char length = strlen(base_url) + strlen(city);
+    char * url = malloc(sizeof(char) * length + 1);
 
+    strcat(url, base_url);
+    strcat(url, city);
+    
     // Allocate and empty bufer that will hold the http get data
     struct Buffer buffer;
     buffer.memory = malloc(1);
     buffer.size = 0;
 
     CURL *handle;
-    CURLcode result;
     handle = curl_easy_init();
 
     // Set curl options
     curl_easy_setopt(handle, CURLOPT_URL, url);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, write_to_buffer);
     curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void *) &buffer);
-    result = curl_easy_perform(handle);
+    curl_easy_perform(handle);
 
     return buffer.memory;
 };
