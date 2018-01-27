@@ -26,7 +26,9 @@ size_t write_to_buffer(void *data, size_t size, size_t nmemb, void *pointer) {
     // Copy the fetched data to the Buffer char pointer
     memcpy(buffer->memory, data, real_size);
     buffer->memory[real_size] = '\0';
-}
+    
+    return real_size;
+};
 
 /**
  * Retrieve the weather data from https://openweathermap.org/api

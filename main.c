@@ -10,21 +10,24 @@
 #include "src/include/search_city.h"
 #include "src/include/get_weather_data.h"
 
-
 int check_json_string(char * to_search, char * string, jsmntok_t token) {
     if (token.type == JSMN_STRING && strcmp(to_search, string) == 0) {
-        return 1;
+        return 0;
     }
 
-    return 0;
+    return -1;
 }
 
 int main(int argc, char *argv[]) {
     if (argc == 1) {
-        printf("Please specify the name of a city to search for\n");
+        printf("\n---------------------------------------------------\n");
+        printf("| Please specify the name of a city to search for |\n");
+        printf("---------------------------------------------------\n\n");
         exit(1);
     } else {
-        printf("Search for weather forecast in: %s\n", argv[1]);
+        printf("\n---------------------------------------------------\n");
+        printf("| Searching for current weather in: %s        | \n", argv[1]);
+        printf("---------------------------------------------------\n\n");
     }
     
     // Read data from file
@@ -54,34 +57,33 @@ int main(int argc, char *argv[]) {
         strncpy(string, weather_data + weather.tokens[i].start, length);
         string[length] = '\0';
 
-        if (weather.tokens[i].type == JSMN_STRING && strcmp(string, "coord") == 0) {
+        if (check_json_string("coord", string, weather.tokens[i]) == 0) {
             printf("Coordinates\n");
         }
         
-        if (weather.tokens[i].type == JSMN_STRING && strcmp(string, "lon") == 0) {
+        if (check_json_string("lon", string, weather.tokens[i]) == 0) {
             printf("\tLatitude: %.*s \n", weather.tokens[i + 1].end - weather.tokens[i + 1].start, weather_data + weather.tokens[i + 1].start);
         }
 
-        if (weather.tokens[i].type == JSMN_STRING && strcmp(string, "lat") == 0) {
+        if (check_json_string("lat", string, weather.tokens[i]) == 0) {
             printf("\tLongitude: %.*s \n", weather.tokens[i + 1].end - weather.tokens[i + 1].start, weather_data + weather.tokens[i + 1].start);
         }
 
-        if (weather.tokens[i].type == JSMN_STRING && strcmp(string, "weather") == 0) {
+        if (check_json_string("weather", string, weather.tokens[i]) == 0) {
             printf("Weather\n");
         }
         
-        if (weather.tokens[i].type == JSMN_STRING && strcmp(string, "main") == 0 && weather.tokens[i + 1].type != JSMN_OBJECT) {
+        if (check_json_string("main", string, weather.tokens[i]) == 0 && weather.tokens[i + 1].type != JSMN_OBJECT) {
             printf("\tConditions: %.*s \n", weather.tokens[i + 1].end - weather.tokens[i + 1].start, weather_data + weather.tokens[i + 1].start);
         }
 
-        if (weather.tokens[i].type == JSMN_STRING && strcmp(string, "description") == 0 && weather.tokens[i + 1].type != JSMN_OBJECT) {
+        if (check_json_string("description", string, weather.tokens[i]) == 0 && weather.tokens[i + 1].type != JSMN_OBJECT) {
             printf("\tDescription: %.*s \n", weather.tokens[i + 1].end - weather.tokens[i + 1].start, weather_data + weather.tokens[i + 1].start);
         }
 
-        if (weather.tokens[i].type == JSMN_STRING && strcmp(string, "temp") == 0 && weather.tokens[i + 1].type != JSMN_OBJECT) {
+        if (check_json_string("temp", string, weather.tokens[i]) == 0 && weather.tokens[i + 1].type != JSMN_OBJECT) {
             printf("\tTemperature: %.*s \n", weather.tokens[i + 1].end - weather.tokens[i + 1].start, weather_data + weather.tokens[i + 1].start);
         }
-
     }
 
     free(data);

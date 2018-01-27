@@ -26,7 +26,6 @@ int search_city(char * to_search, char * data, jsmntok_t * tokens) {
         city[length] = '\0';
 
         if (strcmp(to_search, city) == 0) {
-            printf("Found! %s\n", city);
             return 1;
         }
     }
