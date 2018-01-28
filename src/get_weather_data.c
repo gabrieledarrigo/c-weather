@@ -15,7 +15,7 @@ size_t write_to_buffer(void *data, size_t size, size_t nmemb, void *pointer) {
     struct Buffer * buffer = (struct Buffer *) pointer;
 
     // Reallocate the memory for the Buffer char pointer
-    buffer->memory = realloc(buffer->memory, buffer->size + real_size);
+    buffer->memory = realloc(buffer->memory, buffer->size + real_size + 1);
     buffer->size += real_size;
 
     if (buffer->memory == NULL) {
@@ -33,8 +33,10 @@ size_t write_to_buffer(void *data, size_t size, size_t nmemb, void *pointer) {
 /**
  * Retrieve the weather data from https://openweathermap.org/api
  * with an HTTP GET request.
+ * Return an array of chars.
  * 
  * @param char * city
+ * @return char * buffer.memory
  */
 char * get_weather_data(char * city) {
     curl_global_init(CURL_GLOBAL_ALL);
@@ -43,23 +45,32 @@ char * get_weather_data(char * city) {
     char base_url[] = "http://api.openweathermap.org/data/2.5/weather?appid=82390064987812e43f9ec57cb01311b6&units=metric&q=";
     char length = strlen(base_url) + strlen(city);
     char * url = malloc(sizeof(char) * length + 1);
+    memset(url, 0, length);
 
     strcat(url, base_url);
     strcat(url, city);
     
-    // Allocate and empty bufer that will hold the http get data
+    // Allocate an empty buffer that will hold the http get data
     struct Buffer buffer;
-    buffer.memory = malloc(1);
+    buffer.memory = NULL;
     buffer.size = 0;
 
     CURL *handle;
+    int result;
     handle = curl_easy_init();
 
     // Set curl options
     curl_easy_setopt(handle, CURLOPT_URL, url);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, write_to_buffer);
     curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void *) &buffer);
-    curl_easy_perform(handle);
+    result = curl_easy_perform(handle);
+
+    if (result != CURLE_OK) {
+        printf("A problem occurred during the HTTP CALL to:\n\n%s\n\nWith the following error: %s\n\n", url, curl_easy_strerror(result));
+        exit(1);
+    }
+
+    free(handle);
 
     return buffer.memory;
 };

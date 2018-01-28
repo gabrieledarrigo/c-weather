@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "include/Buffer.h"
 
 /**
@@ -13,7 +14,7 @@ char * read_file(const char * filename) {
     FILE * file;
     
     struct Buffer buffer;
-    buffer.memory = malloc(1);
+    buffer.memory = NULL;
     buffer.size = 0;
 
     file = fopen(filename, "r+");
@@ -26,8 +27,11 @@ char * read_file(const char * filename) {
             buffer.size++;
         }
 
-        // Assign the right amount of data to the buffer.
-        buffer.memory = (char *) malloc((buffer.size + 1) * sizeof(char));
+        // Assign the right amount of data to the buffer and fill it with 0.
+        int size = (buffer.size + 1) * sizeof(char);
+        buffer.memory = (char *) malloc(size);
+        memset(buffer.memory, 0, size);
+
         rewind(file);
         fread(buffer.memory, buffer.size, 1, file);
     } else {
