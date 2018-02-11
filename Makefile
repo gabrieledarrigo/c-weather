@@ -1,6 +1,6 @@
 weather: all
 
-all: main check_json_string get_weather_data parse_json print_weather_data read_file search_city
+all: main check_json_string get_weather_data parse_json print_weather_data read_file search_city jsmn.a
 	gcc -Wall bin/main.o bin/check_json_string.o bin/read_file.o bin/get_weather_data.o bin/parse_json.o bin/print_weather_data.o bin/search_city.o -lcurl lib/libjsmn.a -o weather
 
 main:
@@ -23,6 +23,9 @@ read_file:
 
 search_city:	
 	gcc -Wall -c src/search_city.c -o bin/search_city.o
+
+jsmn.a:
+	gcc -Wall -c lib/jsmn.c -o lib/libjsmn.a
 
 clean:
 	rm bin/*o
