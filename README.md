@@ -46,7 +46,7 @@ c-weather$ make
 Just run the *weather* executable specifying the name of a city:
 
 ```
-c-weather$ ./weather Milano
+c-weather$ ./weather Crema
 
 --------------------------------------------------------
 | Searching for current weather conditions in: Crema
